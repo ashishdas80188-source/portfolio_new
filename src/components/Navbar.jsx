@@ -28,6 +28,22 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      document.body.style.overflow = "hidden";
+      const handleKeyDown = (e) => {
+        if (e.key === "Escape") setMobileMenuOpen(false);
+      };
+      window.addEventListener("keydown", handleKeyDown);
+      return () => {
+        document.body.style.overflow = "";
+        window.removeEventListener("keydown", handleKeyDown);
+      };
+    } else {
+      document.body.style.overflow = "";
+    }
+  }, [mobileMenuOpen]);
+
   const handleLinkClick = () => {
     setMobileMenuOpen(false);
   };
@@ -82,7 +98,12 @@ export default function Navbar() {
       </div>
 
       {/* Mobile Menu Drawer */}
-      <div className={`mobile-menu-overlay ${mobileMenuOpen ? "open" : ""}`}>
+      <div
+        className={`mobile-menu-overlay ${mobileMenuOpen ? "open" : ""}`}
+        onClick={(e) => {
+          if (e.target === e.currentTarget) setMobileMenuOpen(false);
+        }}
+      >
         <div className="mobile-menu-inner">
           <div className="mobile-menu-header">
             <span className="mobile-menu-title">NAVIGATION</span>
